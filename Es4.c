@@ -50,7 +50,7 @@ int main (int argc, char* argv[]){
   printf("\tHello, I am task %d : SUM = %.2f\n", me, SUM);
 
   /* Finalize MPI environment */
-  MPI_Finalize() ;
+  MPI_Finalize();
 
   return 0;
 }
