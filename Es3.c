@@ -35,6 +35,7 @@ int main (int argc, char * argv[]){
   /* Find destination (right) and source (left) */
   right = me + 1;
   left = me - 1;
+  /* Special cases (left of 0 / right of nprocs) */
   if(right==nprocs){
     right=0;
   }
@@ -46,7 +47,7 @@ int main (int argc, char * argv[]){
   MPI_Isend(A, DIM, MPI_REAL, right, 0, MPI_COMM_WORLD, &request);
   MPI_Recv(B, DIM, MPI_REAL, left, 0, MPI_COMM_WORLD, &status);
 
-  /* ...and print it. */
+  /* and print it. */
   printf("\tHello, I am task %d : I received %.2f\n", me, B[0]);
 
   /* Finalize MPI environment */

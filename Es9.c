@@ -28,13 +28,15 @@ int main (int argc, char * argv[]){
 
   int i, arr_send[DIM_ARRAY], arr_recv[DIM_ARRAY];
 
-  /* Porc.... */
+  /* Damn.... */
   srand(time(NULL)*(me+1));
+
   /* Initialize array with rank */
   for(i=0; i < DIM_ARRAY; i++){
     arr_send[i]=me+1;
   }
 
+  /* Reduce operation */
   MPI_Reduce(arr_send, arr_recv, DIM_ARRAY, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
   /* Print Reduce sum */
@@ -43,6 +45,7 @@ int main (int argc, char * argv[]){
     printf("arr_recv[0]: %d\n", arr_recv[0]);
   }
 
+  /* Reduce operation */
   MPI_Reduce(arr_send, arr_recv, DIM_ARRAY, MPI_INT, MPI_PROD, 0, MPI_COMM_WORLD);
 
   /* Print Reduce prod */

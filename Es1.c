@@ -1,6 +1,5 @@
 /*
-*   Using MPI try to print out:
-*
+* Using MPI try to print out:
 * "Hello world, I am proc X of total Y"
 * with a total number of tasks Y = 4 and X ranging from 0 to 3.
 * After having compiled the code, try to launch it as a batch job (on FERMI: remember to cross-compile!).
@@ -23,8 +22,9 @@ int main (int argc, char * argv[]){
   /* Get my rank... */
   MPI_Comm_rank(MPI_COMM_WORLD, &me) ;
 
-  /* ...and print it. */
+  /* Print it. */
   printf("\tHello, I am task %d of %d.\n", me, nprocs);
+
   /* Finalize MPI environment */
   MPI_Finalize() ;
 

@@ -23,46 +23,54 @@ int main (int argc, char * argv[]){
   /* Get my rank... */
   MPI_Comm_rank(MPI_COMM_WORLD, &me) ;
 
+  /* Buffer allocation */
   int arr_send[DIM_ARRAY];
   int arr_receive[DIM_ARRAY/nprocs];
 
   if (me==0){
-    /* Init array */
+    /* Init array for Rank 0*/
     for(i=0; i < DIM_ARRAY; i++){
       arr_send[i] = i;
     }
   }
 
+  /* Define 2 cases */
   if (DIM_ARRAY % nprocs == 0){
+
     /* Equal chunks (gather/scatter) */
     MPI_Scatter(arr_send, DIM_ARRAY / nprocs, MPI_INT, arr_receive, DIM_ARRAY / nprocs, MPI_INT, 0, MPI_COMM_WORLD);
-    /* print each process sub-array */{
+
+    /* Print each process sub-array */{
     printf("Process %d: received ", me);
       for (i=0; i < DIM_ARRAY / nprocs ; i++){
            printf("%d ", arr_receive[i]);
       }
       printf("\n");
     }
+
     /* Increment */
     for (i=0; i < DIM_ARRAY / nprocs; i++){
       arr_receive[i] += me;
     }
+
     /* Send back to root */
     MPI_Gather(arr_receive, DIM_ARRAY / nprocs, MPI_INT, arr_send, DIM_ARRAY / nprocs, MPI_INT, 0, MPI_COMM_WORLD);
+
     /* Root prints */
     if(me == 0){
       for (i=0; i < DIM_ARRAY ; i++){
          printf("Final process: received %d\n", arr_send[i]);
       }
     }
-  } else {
-    /* Not equal chunks (gatherv/scatterv) */
 
+  } else {
+
+    /* Not equal chunks (gatherv/scatterv) */
     int ncells[nprocs];
     int tmp = (int) DIM_ARRAY / nprocs;
     int displs[nprocs];
 
-    /* Cells for process */
+    /* Calculate cells for process */
     for(i=0; i < nprocs; i++){
       ncells[i] = tmp;
     }
@@ -73,7 +81,7 @@ int main (int argc, char * argv[]){
       }
     }
 
-    /* Displacements */
+    /* Calculate displacements */
     displs[0] = 0;
     for(i=1;i<nprocs;i++){
       displs[i] = displs[i-1] + ncells[i-1];
@@ -82,13 +90,12 @@ int main (int argc, char * argv[]){
     /* Scatterv */
     MPI_Scatterv(arr_send, &ncells[me], &displs[me], MPI_INT, arr_receive, ncells[me], MPI_INT, 0, MPI_COMM_WORLD);
 
-    /* print each process sub-array */{
+    /* Print each process sub-array */
     printf("Process %d: received ", me);
-      for (i=0; i < ncells[me] ; i++){
-           printf("%d ", arr_receive[i]);
-      }
-      printf("\n");
+    for (i=0; i < ncells[me] ; i++){
+         printf("%d ", arr_receive[i]);
     }
+    printf("\n");
 
     /* Increment */
     for (i=0; i < ncells[me]; i++){

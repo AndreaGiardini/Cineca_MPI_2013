@@ -14,8 +14,8 @@
 int main (int argc, char * argv[]){
 
   int me, nprocs, i;
-  MPI_Status status;
   float A[DIM], B[DIM];
+  MPI_Status status;
 
   /* Initialize MPI environment */
   MPI_Init(&argc, &argv) ;
@@ -35,6 +35,7 @@ int main (int argc, char * argv[]){
     A[i]=me;
   }
 
+  /* Different behaviours */
   if(me==0){
     /*Task 0*/
     MPI_Send(A, DIM, MPI_REAL, 1, 0, MPI_COMM_WORLD);
@@ -45,9 +46,9 @@ int main (int argc, char * argv[]){
     MPI_Send(A, DIM, MPI_REAL, 0, 0, MPI_COMM_WORLD);
   }
 
-  /* ...and print it. */
+  /* and print it. */
   printf("\tHello, I am task %d : I received %.2f\n", me, B[0]);
-  
+
   /* Finalize MPI environment */
   MPI_Finalize() ;
 

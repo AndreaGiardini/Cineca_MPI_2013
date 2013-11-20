@@ -31,14 +31,17 @@ int main (int argc, char * argv[]){
     return 1;
   }
 
+  /* Rank 0 has a different behaviour */
   if(me==0){
     /* Rank 0 process */
     value = atof(argv[1]);
     value = sqrt(value);
   } else {
+    /* All others */
     value=0;
   }
 
+  /* Broadcast */
   printf("Process %d: had %f\n", me, value);
   MPI_Bcast(&value, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD );
   printf("Process %d: received %f\n", me, value);

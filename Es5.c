@@ -15,6 +15,7 @@
 int main (int argc, char * argv[]){
 
   int nprocs, me;
+
   /* Initialize MPI environment */
   MPI_Init(&argc, &argv) ;
 
@@ -24,14 +25,20 @@ int main (int argc, char * argv[]){
   /* Get n processes */
   MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
 
+  /* Cheks parameters */
   if(nprocs > N){
-    printf("Rows number shuold be more than process number\n");
+    printf("Rows number shuold be more than proces number\n");
     MPI_Abort(MPI_COMM_WORLD, 1);
   }
 
+  /*
+  * Sets up array: each index contains the number of rows for rank
+  * es. localmatrix_size[3] contains the number of rows for rank 3 process
+  */
   int localmatrix_size[nprocs];
   int i=0;
 
+  /* Get number of lines for each rank */
   int tmp = (int) N / nprocs;
 
   for(i=0; i < nprocs; i++){
@@ -44,6 +51,7 @@ int main (int argc, char * argv[]){
     }
   }
 
+  /* Allocate the local_matrix */
   int j, matrix[localmatrix_size[me]+2][N];
 
   for(i=1; i <= localmatrix_size[me]; i++){
@@ -51,6 +59,8 @@ int main (int argc, char * argv[]){
       matrix[i][j]=me;
     }
   }
+
+  //TODO: Complete
 
   return 0;
 }
